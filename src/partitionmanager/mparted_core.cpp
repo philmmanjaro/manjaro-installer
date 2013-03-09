@@ -40,7 +40,7 @@ QList<MParted::Filesystem*> MParted::MParted_Core::filesystems;
 
 
 void MParted::MParted_Core::init() {
-   // QMutexLocker locker(&mutex);
+    QMutexLocker locker(&mutex);
 
     // Init filesystems
     filesystems.append(new MParted::ext4());
@@ -143,7 +143,7 @@ void MParted::MParted_Core::scan(MParted::Devices & devices) {
 }
 
 
-
+// TODO add error messages!
 bool MParted::MParted_Core::applyOperationToDisk(MParted::Operation * operation) {
     QMutexLocker locker(&mutex);
     bool success = false;
@@ -170,9 +170,6 @@ bool MParted::MParted_Core::applyOperationToDisk(MParted::Operation * operation)
                              operation->partition_original,
                              operation->partition_new);
             break;
-        /*case OPERATION_LABEL_PARTITION:
-            succes = label_partition( operation ->partition_new, operation ->operation_detail ) ;
-            break;*/
         default:
             return false;
     }
@@ -1057,8 +1054,6 @@ bool MParted::MParted_Core::resize(const MParted::Device & device,
                 MParted::Partition & partition_old,
                 MParted::Partition & partition_new)
 {
-    // TODO: Check if new sector end is bigger than disk and collapses with other partitions! Also check extended partition resize with internal partitions!!!!!!!!!!!!!!
-
     // We only support resizing
     if (partition_new.sector_start != partition_old.sector_start)
         return false;
@@ -1073,7 +1068,7 @@ bool MParted::MParted_Core::resize(const MParted::Device & device,
 
     // If start sector has changed then undo the change
     if (partition_new.sector_start != partition_old.sector_start)
-        partition_new.sector_start = partition_old.sector_start; // TODO: is this ok?
+        partition_new.sector_start = partition_old.sector_start; // TODO: is this ok? -> alignment?
 
     if (partition_old.type == MParted::TYPE_EXTENDED)
         return resizePartition(partition_old, partition_new);
@@ -1091,14 +1086,10 @@ bool MParted::MParted_Core::resize(const MParted::Device & device,
     if (success)
         success = resizePartition(partition_old, partition_new);
 
-    // Do not maximize file system if FS not linux-swap and new size <= old
-    if (success
-            && partition_new.filesystem != MParted::FS_LINUX_SWAP // linux-swap is recreated, not resized
-            && partition_new.getSectorLength() > partition_old.getSectorLength())
-    {
+    // Do not maximize file system if new size <= old. It has been resized already...
+    if (success && partition_new.getSectorLength() > partition_old.getSectorLength())
         // Expand file system to fit exactly in partition
         success = maximizeFilesystem(partition_new);
-    }
 
     // Finally check the filesystem again
     if (!checkRepairFilesystem(partition_new))

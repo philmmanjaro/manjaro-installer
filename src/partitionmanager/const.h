@@ -50,8 +50,7 @@ enum OperationType {
     OPERATION_REMOVE	= 0,
     OPERATION_CREATE	= 1,
     OPERATION_RESIZE	= 2,
-    OPERATION_FORMAT	= 3,
-    OPERATION_LABEL_PARTITION = 4
+    OPERATION_FORMAT	= 3
 };
 
 enum PartitionType {

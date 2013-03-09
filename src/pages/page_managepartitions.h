@@ -50,10 +50,15 @@ public:
     void activated();
     
 private:
+    class TreeWidgetPartitionItem : public QTreeWidgetItem
+    {
+    public:
+        MParted::Partition partition;
+    };
+
     Ui::Page_ManagePartitions *ui;
-    MParted::MParted_Virtual mparted;
-    MParted::Partitions treeWidgetPartitions;
-    PartitionCreateDialog partitionCreateDialog;
+    MParted::MParted_Virtual *mparted;
+    PartitionCreateDialog *partitionCreateDialog;
 
     void refreshPartitionView();
     QTreeWidgetItem* addPartitionItem(MParted::Partition & partition, QTreeWidgetItem *parent);

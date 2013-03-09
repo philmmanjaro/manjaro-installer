@@ -3,9 +3,9 @@
 PartWidget::PartWidget(QWidget *parent) :
     QWidget(parent)
 {
-    QStyle* style = new QPlastiqueStyle();
+    /*QStyle* style = new QPlastiqueStyle();
     style->setParent(this);
-    setStyle(style);
+    setStyle(style);*/
 }
 
 

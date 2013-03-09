@@ -34,6 +34,7 @@ class Filesystem
 {   
 public:
     Filesystem();
+    virtual ~Filesystem() = 0;
 
     MParted::FSSupport getFilesystemSupport() { return fsSupport; }
     MParted::FILESYSTEM getFilesystemType() { return filesystem; }

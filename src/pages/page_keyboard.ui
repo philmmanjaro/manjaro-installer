@@ -70,8 +70,6 @@
     </layout>
    </item>
   </layout>
-  <zorder>layoutWidget_3</zorder>
-  <zorder>horizontalSpacer_2</zorder>
   <zorder>listLayout</zorder>
   <zorder>listVariant</zorder>
  </widget>

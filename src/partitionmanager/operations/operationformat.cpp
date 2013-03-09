@@ -18,12 +18,12 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "operationcreate.h"
+#include "operationformat.h"
 
 
-MParted::OperationCreate::OperationCreate(Device & device, Partition & partition_orig, Partition & partition_new)
+MParted::OperationFormat::OperationFormat(Device & device, Partition & partition_orig, Partition & partition_new)
 {
-    type = MParted::OPERATION_CREATE;
+    type = MParted::OPERATION_FORMAT;
 
     this->device = device;
     this->partition_original = partition_orig;
@@ -32,7 +32,7 @@ MParted::OperationCreate::OperationCreate(Device & device, Partition & partition
 
 
 
-bool MParted::OperationCreate::applyToVisual(Partitions & partitions) {
+bool MParted::OperationFormat::applyToVisual(Partitions & partitions) {
     int index = -1;
 
     if (partition_original.insideExtended) {
@@ -44,7 +44,6 @@ bool MParted::OperationCreate::applyToVisual(Partitions & partitions) {
         if (index < 0)
             return false;
 
-        // Add new partition
         partitions[index_extended].logicals[index] = partition_new;
     }
     else
@@ -53,42 +52,17 @@ bool MParted::OperationCreate::applyToVisual(Partitions & partitions) {
         if (index < 0)
             return false;
 
-        // Add new partition
         partitions[index] = partition_new;
     }
-
-
-    // Finally update unallocated space
-    UnallocatedUtils::updateUnallocated(device, partitions);
 
     return true;
 }
 
 
 
-QString MParted::OperationCreate::createDescription() {
-    QString type;
-
-    switch(partition_new.type) {
-        case MParted::TYPE_PRIMARY	:
-            type = QObject::tr("Primary Partition");
-            break;
-        case MParted::TYPE_LOGICAL	:
-            type = QObject::tr("Logical Partition") ;
-            break;
-        case MParted::TYPE_EXTENDED	:
-            type = QObject::tr("Extended Partition");
-            break;
-
-        default	:
-            break;
-    }
-
-    /*TO TRANSLATORS: looks like   Create Logical Partition #1 (ntfs, 345 MiB) on /dev/hda */
-    return QObject::tr("Create %1 #%2 (%3, %4) on %5").arg(
-                    type,
-                    QString::number(partition_new.partitionNumber),
-                    partition_new.getFilesystemString(),
-                    partition_new.getFormattedSize(),
-                    device.path);
+QString MParted::OperationFormat::createDescription() {
+    /*TO TRANSLATORS: looks like  Format /dev/hda4 as linux-swap */
+    return QObject::tr("Format %1 as %2").arg(
+                    partition_original.path,
+                    partition_new.getFilesystemString());
 }

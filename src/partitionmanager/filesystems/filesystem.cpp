@@ -25,3 +25,8 @@ MParted::Filesystem::Filesystem()
     filesystem = MParted::FS_UNKNOWN;
     fsMIN = fsMAX = 0;
 }
+
+
+
+MParted::Filesystem::~Filesystem() {
+}

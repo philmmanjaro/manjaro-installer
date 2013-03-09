@@ -4,13 +4,12 @@
 #
 #-------------------------------------------------
 
-QT       += core gui webkit
+QT       += core gui
+
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 LIBS += -lmawiz -lparted -lmhwd
 INCLUDEPATH += "/usr/include/parted"
-
-
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = minst
 TEMPLATE = app
@@ -38,7 +37,9 @@ SOURCES += main.cpp\
     widgets/partresizerwidget.cpp \
     pages/page_gpudriver.cpp \
     pages/page_keyboard.cpp \
-    widgets/partwidget.cpp
+    widgets/partwidget.cpp \
+    partitionmanager/operations/operationresize.cpp \
+    partitionmanager/operations/operationformat.cpp
 
 HEADERS  += minst.h \
     pages/page_intro.h \
@@ -64,7 +65,9 @@ HEADERS  += minst.h \
     widgets/partresizerwidget.h \
     pages/page_gpudriver.h \
     pages/page_keyboard.h \
-    widgets/partwidget.h
+    widgets/partwidget.h \
+    partitionmanager/operations/operationresize.h \
+    partitionmanager/operations/operationformat.h
 
 
 FORMS += \

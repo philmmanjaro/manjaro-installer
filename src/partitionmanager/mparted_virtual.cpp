@@ -52,6 +52,8 @@ void MParted::MParted_Virtual::scanAndReset() {
 
 
 bool MParted::MParted_Virtual::applyToDisk() {
+    QMutexLocker locker(&mutex);
+
     for (int i = 0; i < operations.size(); i++) {
         if (!MParted::MParted_Core::applyOperationToDisk(operations[i])) {
             scanAndReset();
@@ -63,7 +65,7 @@ bool MParted::MParted_Virtual::applyToDisk() {
 }
 
 
-// TODO: also check if max pirms is already on maxium!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
 bool MParted::MParted_Virtual::isExtendedPartitionCreatable(const MParted::Partition & unallocatedPartition) {
     if (unallocatedPartition.insideExtended)
         return false;
@@ -75,7 +77,51 @@ bool MParted::MParted_Virtual::isExtendedPartitionCreatable(const MParted::Parti
     if (index < 0)
         return false;
 
-    return !devices[index].hasExtendedPartition();
+    MParted::Device &device = devices[index];
+
+    // Check if it is possible to create another primary partition
+    int count = 0;
+    for (int i = 0; i < device.partitions.size(); i++)
+        if (device.partitions.at(i).type == MParted::TYPE_PRIMARY || device.partitions.at(i).type == MParted::TYPE_EXTENDED)
+            ++count;
+
+    if (count >= device.maxPrimaryPartitions)
+        return false;
+
+    // Check if there is already an extended partition
+    return !device.hasExtendedPartition();
+}
+
+
+
+bool MParted::MParted_Virtual::isPartitionCreatable(const MParted::Partition & unallocatedPartition) {
+    // Partition has to be an unallocated partition with a minimum size of 1MB
+    if (unallocatedPartition.filesystem != MParted::FS_UNALLOCATED
+            || Utils::round(Utils::sectorToUnit(unallocatedPartition.getSectorLength(), unallocatedPartition.sector_size, MParted::UNIT_MIB)) < 1)
+        return false;
+
+    QMutexLocker locker(&mutex);
+
+    // Find device
+    int index = findDeviceIndex(unallocatedPartition);
+    if (index < 0)
+        return false;
+
+    MParted::Device &device = devices[index];
+
+
+    // If this is a primary partition then check if it is possible to create another primary partition
+    if (!unallocatedPartition.insideExtended) {
+        int count = 0;
+        for (int i = 0; i < device.partitions.size(); i++)
+            if (device.partitions.at(i).type == MParted::TYPE_PRIMARY || device.partitions.at(i).type == MParted::TYPE_EXTENDED)
+                ++count;
+
+        if (count >= device.maxPrimaryPartitions)
+            return false;
+    }
+
+    return true;
 }
 
 
@@ -415,7 +461,7 @@ void MParted::MParted_Virtual::mergeOperations() {
             first = second - 1;
         }
         // Two label change operations on the same partition
-        else if ( (*first)->type == MParted::OPERATION_LABEL_PARTITION &&
+        /*else if ( (*first)->type == MParted::OPERATION_LABEL_PARTITION &&
                   (*second)->type == MParted::OPERATION_LABEL_PARTITION &&
                   (*first)->partition_new == (*second)->partition_original
                 )
@@ -423,7 +469,7 @@ void MParted::MParted_Virtual::mergeOperations() {
             (*first)->partition_new.label = (*second)->partition_new.label;
             second = operations.erase(second);
             first = second - 1;
-        }
+        }*/
         // Two format operations of the same partition
         else if ( (*first)->type == MParted::OPERATION_FORMAT &&
                   (*second)->type == MParted::OPERATION_FORMAT &&

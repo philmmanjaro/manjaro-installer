@@ -60,6 +60,7 @@ public:
     bool applyToDisk();
 
     bool isExtendedPartitionCreatable(const MParted::Partition & unallocatedPartition);
+    bool isPartitionCreatable(const MParted::Partition & unallocatedPartition);
 
     MParted::MParted_Virtual::PARTITION_CREATE_RANGES getCreatePartitionRanges(const MParted::Partition & unallocatedPartition, MParted::FILESYSTEM filesystem);
 

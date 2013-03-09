@@ -23,13 +23,15 @@
 
 Page_ManagePartitions::Page_ManagePartitions() :
     MaWizPage(),
-    ui(new Ui::Page_ManagePartitions),
-    mparted(),
-    partitionCreateDialog(&mparted, this)
+    ui(new Ui::Page_ManagePartitions)
 {
     ui->setupUi(this);
     setTitle(tr("Prepare Partitions"));
     setHelpURL("http://wiki.manjaro.org");
+
+    // Set up MParted_Virtual and partition widgets
+    mparted = new MParted::MParted_Virtual();
+    partitionCreateDialog = new PartitionCreateDialog(mparted, this);
 
     // Set emtpy text of lock header item
     if (ui->PartitionView->headerItem() != NULL)
@@ -48,7 +50,7 @@ Page_ManagePartitions::Page_ManagePartitions() :
     connect(ui->buttonDeletePartition, SIGNAL(clicked())    ,   this, SLOT(buttonDeletePartition_clicked()));
     connect(ui->buttonCreatePartition, SIGNAL(clicked())    ,   this, SLOT(buttonCreatePartition_clicked()));
     connect(ui->buttonUnmount, SIGNAL(clicked())    ,   this, SLOT(buttonUnmount_clicked()));
-    connect(&partitionCreateDialog, SIGNAL(requestNewPartition(MParted::Partition,ulong,ulong,MParted::FILESYSTEM,bool,MParted::PartitionAlignment,QString)),
+    connect(partitionCreateDialog, SIGNAL(requestNewPartition(MParted::Partition,ulong,ulong,MParted::FILESYSTEM,bool,MParted::PartitionAlignment,QString)),
             this, SLOT(createNewPartition(MParted::Partition,ulong,ulong,MParted::FILESYSTEM,bool,MParted::PartitionAlignment,QString)));
 }
 
@@ -56,10 +58,12 @@ Page_ManagePartitions::Page_ManagePartitions() :
 
 Page_ManagePartitions::~Page_ManagePartitions()
 {
+    delete partitionCreateDialog;
+    delete mparted;
+    delete ui;
+
     // Release MParted library
     MParted::MParted_Core::release();
-
-    delete ui;
 }
 
 
@@ -72,7 +76,7 @@ void Page_ManagePartitions::init() {
 
 
 void Page_ManagePartitions::activated() {
-    mparted.scanAndReset();
+    mparted->scanAndReset();
     refreshPartitionView();
 }
 
@@ -88,15 +92,14 @@ void Page_ManagePartitions::refreshPartitionView() {
     int scrollYValue = 0;
     QScrollBar *scrollBar = ui->PartitionView->verticalScrollBar();
 
-    if (scrollBar != NULL)
+    if (scrollBar)
         scrollYValue = scrollBar->value();
 
     // Clean up
     ui->PartitionView->clear();
-    treeWidgetPartitions.clear();
 
 
-    MParted::Devices devices = mparted.getDevices();
+    MParted::Devices devices = mparted->getDevices();
     QFont font;
     font.setBold(true);
     font.setWeight(75);
@@ -148,7 +151,7 @@ void Page_ManagePartitions::refreshPartitionView() {
     // Restore vertical scroll bar value
     scrollBar = ui->PartitionView->verticalScrollBar();
 
-    if (scrollBar != NULL && scrollYValue > 0) {
+    if (scrollBar && scrollYValue > 0) {
         if (scrollYValue > scrollBar->maximum())
             scrollYValue = scrollBar->maximum();
 
@@ -159,13 +162,13 @@ void Page_ManagePartitions::refreshPartitionView() {
 
 
 QTreeWidgetItem* Page_ManagePartitions::addPartitionItem(MParted::Partition & partition, QTreeWidgetItem *parent) {
-    QTreeWidgetItem *item = new QTreeWidgetItem;
+    TreeWidgetPartitionItem *item = new TreeWidgetPartitionItem();
     parent->addChild(item);
     item->setExpanded(true);
     item->setSizeHint(0, QSize(0, 32));
 
-    // Add to list
-    treeWidgetPartitions.append(partition);
+    // Set item's partition
+    item->partition = partition;
 
     // Filesystem color icon
     QPixmap pixmap(16, 16);
@@ -192,9 +195,6 @@ QTreeWidgetItem* Page_ManagePartitions::addPartitionItem(MParted::Partition & pa
     if (partition.busy)
         item->setIcon(2, QIcon(":/images/resources/lock_small.png"));
 
-    // Add ID to find right partition on action
-    item->setText(10, QString::number(treeWidgetPartitions.size()-1));
-
     return item;
 }
 
@@ -207,59 +207,50 @@ QTreeWidgetItem* Page_ManagePartitions::addPartitionItem(MParted::Partition & pa
 
 void Page_ManagePartitions::buttonDeletePartition_clicked() {
     // TODO error handling!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    QTreeWidgetItem *item = ui->PartitionView->currentItem();
-    if (item == NULL)
+    TreeWidgetPartitionItem *item = dynamic_cast<TreeWidgetPartitionItem*>(ui->PartitionView->currentItem());
+    if (!item) {
+        // TODO: error message!
         return;
+    }
 
-    int index = item->text(10).toInt();
+    if (!mparted->removePartition(item->partition)) {
+        // TODO: messagebox
+        return;
+    }
 
-    if (index < 0 || index >= treeWidgetPartitions.size()) {
-        // TODO: messagebox
-    }
-    else if (!mparted.removePartition(treeWidgetPartitions[index])) {
-        // TODO: messagebox
-    }
-    else {
-        // Success -> refresh view
-        refreshPartitionView();
-    }
+    // Success -> refresh view
+    refreshPartitionView();
 }
 
 
 
 void Page_ManagePartitions::buttonCreatePartition_clicked() {
     // TODO error handling!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    QTreeWidgetItem *item = ui->PartitionView->currentItem();
-    if (item == NULL)
-        return;
-
-    int index = item->text(10).toInt();
-    if (index < 0 || index >= treeWidgetPartitions.size()) {
-        // TODO: messagebox
+    TreeWidgetPartitionItem *item = dynamic_cast<TreeWidgetPartitionItem*>(ui->PartitionView->currentItem());
+    if (!item) {
+        // TODO: error message!
         return;
     }
 
-    MParted::Partition &partition = treeWidgetPartitions[index];
-
-    partitionCreateDialog.setData(partition);
-    partitionCreateDialog.exec();
+    partitionCreateDialog->setData(item->partition);
+    partitionCreateDialog->exec();
 }
 
 
 
 void Page_ManagePartitions::buttonUnmount_clicked() {
-    if (!mparted.applyToDisk())
+    if (!mparted->applyToDisk())
         qDebug("error!");
     else
         qDebug("success!");
 }
 
 
-
+// TODO: put this into the widget class
 void Page_ManagePartitions::createNewPartition(MParted::Partition unallocatedPartition, unsigned long MBytesBefore,
                         unsigned long MBytesSize, MParted::FILESYSTEM filesystem,
                         bool asExtended, MParted::PartitionAlignment alignment, QString label) {
-    if (!mparted.createPartition(unallocatedPartition, MBytesBefore, MBytesSize, filesystem, asExtended, alignment, label)) {
+    if (!mparted->createPartition(unallocatedPartition, MBytesBefore, MBytesSize, filesystem, asExtended, alignment, label)) {
         // TODO: messagebox
     }
     else {

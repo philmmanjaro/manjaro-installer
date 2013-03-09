@@ -1,5 +1,5 @@
 /*
- *  Manjaro Installation Framework
+ *  Manjaro Parted Backend
  *  Roland Singer <roland@manjaro.org>
  *
  *  Copyright (C) 2007 Free Software Foundation, Inc.
@@ -18,36 +18,30 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef PARTWIDGET_H
-#define PARTWIDGET_H
+#ifndef OPERATIONRESIZE_H
+#define OPERATIONRESIZE_H
 
-#include <QWidget>
-#include <QPainter>
-#include <QRect>
-#include <QColor>
-#include <QStyle>
-#include <QStyleOptionButton>
-#include "partitionmanager/mparted.h"
-
-// Based on KDEPartitionManager
+#include <QString>
+#include "operation.h"
 
 
-class PartWidget : public QWidget
+namespace MParted {
+
+
+class OperationResize : public Operation
 {
-    Q_OBJECT
 public:
-    explicit PartWidget(QWidget *parent = 0);
-    
-    void setPartition(MParted::Partition & partition);
+    OperationResize(Device & device, Partition & partition_orig, Partition & partition_new);
 
-protected:
-    void paintEvent(QPaintEvent* event);
+    bool applyToVisual(Partitions & partitions);
+    QString createDescription();
 
-    void drawGradient(QPainter* painter, const QColor& color, const QRect& rect, bool active = false) const;
+    bool applyNormalToVisual(Partitions & partitions);
+    bool applyExtendedToVisual(Partitions & partitions);
 
-private:
-    MParted::Partition partition;
-    
 };
 
-#endif // PARTWIDGET_H
+
+}
+
+#endif // OPERATIONRESIZE_H
