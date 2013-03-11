@@ -24,7 +24,7 @@
 
 #define LOCALESDIR "/usr/share/i18n/locales"
 #define TZ_DATA_FILE "/usr/share/zoneinfo/zone.tab"
-#define XKB_BASE_XML "/usr/share/X11/xkb/rules/base.xml"
+#define XKB_FILE "/usr/share/X11/xkb/rules/base.lst"
 
 
 #endif // CONST_H

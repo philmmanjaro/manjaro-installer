@@ -29,6 +29,8 @@
 #include <QList>
 #include <QHash>
 #include <QMap>
+#include <QRegExp>
+#include <QDebug>
 #include "const.h"
 
 class Global
@@ -43,9 +45,17 @@ public:
         double latitude, longitude;
     };
 
+    struct KeyboardInfo {
+        QString description;
+        QMap< QString, QString > variants;
+    };
+
+
     static void init();
     static QHash<QString, QHash<QString, QList<Global::Locale> > > getLocales();
     static QHash<QString, QList<Global::Location> > getLocations();
+    static QMap< QString, KeyboardInfo > getKeyboardLayouts();
+    static QMap<QString, QString> getKeyboardModels();
 
 private:
     static QHash<QString, QHash<QString, QList<Global::Locale> > > locales;
@@ -54,6 +64,9 @@ private:
     static void initLocales();
     static void initLocations();
     static double getRightGeoLocation(QString str);
+
+    static QMap<QString, QString> parseKeyboardModels(QString filepath);
+    static QMap< QString, KeyboardInfo > parseKeyboardLayouts(QString filepath);
 };
 
 #endif // GLOBAL_H

@@ -8,7 +8,7 @@ QT       += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-LIBS += -lmawiz -lparted -lmhwd
+LIBS += -lmawiz -lparted -lmhwd -lX11
 INCLUDEPATH += "/usr/include/parted"
 
 TARGET = minst
@@ -39,7 +39,8 @@ SOURCES += main.cpp\
     pages/page_keyboard.cpp \
     widgets/partwidget.cpp \
     partitionmanager/operations/operationresize.cpp \
-    partitionmanager/operations/operationformat.cpp
+    partitionmanager/operations/operationformat.cpp \
+    widgets/keyboardpreview.cpp
 
 HEADERS  += minst.h \
     pages/page_intro.h \
@@ -67,7 +68,8 @@ HEADERS  += minst.h \
     pages/page_keyboard.h \
     widgets/partwidget.h \
     partitionmanager/operations/operationresize.h \
-    partitionmanager/operations/operationformat.h
+    partitionmanager/operations/operationformat.h \
+    widgets/keyboardpreview.h
 
 
 FORMS += \

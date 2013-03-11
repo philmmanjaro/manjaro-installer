@@ -18,6 +18,47 @@
     <number>9</number>
    </property>
    <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <property name="topMargin">
+      <number>0</number>
+     </property>
+     <item>
+      <widget class="QLabel" name="label">
+       <property name="text">
+        <string>Keyboard Model:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QComboBox" name="comboBoxModel">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="buttonRestore">
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="../minst_resources.qrc">
+         <normaloff>:/images/resources/restore.png</normaloff>:/images/resources/restore.png</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>18</width>
+         <height>18</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
     <layout class="QHBoxLayout" name="horizontalLayout_3">
      <property name="spacing">
       <number>9</number>
@@ -31,48 +72,77 @@
     </layout>
    </item>
    <item>
-    <layout class="QHBoxLayout" name="horizontalLayout_2">
+    <layout class="QHBoxLayout" name="horizontalLayout">
      <property name="spacing">
-      <number>9</number>
+      <number>0</number>
+     </property>
+     <property name="topMargin">
+      <number>12</number>
+     </property>
+     <property name="bottomMargin">
+      <number>12</number>
      </property>
      <item>
-      <widget class="QLineEdit" name="LE_TestKeyboard">
-       <property name="font">
-        <font>
-         <weight>50</weight>
-         <bold>false</bold>
-        </font>
+      <spacer name="horizontalSpacer_2">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
        </property>
-       <property name="inputMask">
-        <string/>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-       <property name="placeholderText">
-        <string>Type here to test your keyboard</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="B_Advanced_2">
-       <property name="minimumSize">
+       <property name="sizeHint" stdset="0">
         <size>
-         <width>110</width>
-         <height>0</height>
+         <width>40</width>
+         <height>20</height>
         </size>
        </property>
-       <property name="text">
-        <string>Advanced</string>
+      </spacer>
+     </item>
+     <item>
+      <layout class="QVBoxLayout" name="KBPreviewLayout"/>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
        </property>
-      </widget>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
      </item>
     </layout>
    </item>
+   <item>
+    <widget class="QLineEdit" name="LE_TestKeyboard">
+     <property name="font">
+      <font>
+       <weight>50</weight>
+       <bold>false</bold>
+      </font>
+     </property>
+     <property name="inputMask">
+      <string/>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="placeholderText">
+      <string>Type here to test your keyboard</string>
+     </property>
+    </widget>
+   </item>
   </layout>
-  <zorder>listLayout</zorder>
-  <zorder>listVariant</zorder>
  </widget>
- <resources/>
+ <tabstops>
+  <tabstop>comboBoxModel</tabstop>
+  <tabstop>listLayout</tabstop>
+  <tabstop>listVariant</tabstop>
+  <tabstop>LE_TestKeyboard</tabstop>
+  <tabstop>buttonRestore</tabstop>
+ </tabstops>
+ <resources>
+  <include location="../minst_resources.qrc"/>
+ </resources>
  <connections/>
 </ui>

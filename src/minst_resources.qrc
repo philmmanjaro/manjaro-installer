@@ -51,5 +51,6 @@
         <file>resources/gpudriver.png</file>
         <file>resources/ati.png</file>
         <file>resources/nvidia.png</file>
+        <file>resources/restore.png</file>
     </qresource>
 </RCC>

@@ -56,7 +56,7 @@ void MInst::init() {
     pageManagePartitions.init();
     pageGPUDriver.init();
     pageTimeZone.init();
-    //pageKeyboard.init();
+    pageKeyboard.init();
 
     // Show widget
     show();

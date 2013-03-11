@@ -23,7 +23,13 @@
 #define PAGE_KEYBOARD_H
 
 #include <MaWiz/mawizpage.h>
-
+#include <QMap>
+#include <QMapIterator>
+#include <QListWidgetItem>
+#include <QProcess>
+#include <stdlib.h>
+#include "widgets/keyboardpreview.h"
+#include "global.h"
 
 
 namespace Ui {
@@ -38,9 +44,29 @@ class Page_Keyboard : public MaWizPage
 public:
     explicit Page_Keyboard();
     ~Page_Keyboard();
+
+    void init();
+    bool ready();
+    void activated();
     
 private:
+    class LayoutItem : public QListWidgetItem {
+    public:
+        QString data;
+        Global::KeyboardInfo info;
+    };
+
     Ui::Page_Keyboard *ui;
+    KeyBoardPreview keyboardPreview;
+    int defaultIndex;
+    QMap<QString, QString> models;
+
+protected slots:
+    void listLayout_currentItemChanged(QListWidgetItem * current, QListWidgetItem * previous);
+    void listVariant_currentItemChanged(QListWidgetItem * current, QListWidgetItem * previous);
+    void buttonRestore_clicked();
+    void comboBoxModel_currentIndexChanged(const QString & text);
+
 };
 
 #endif // PAGE_KEYBOARD_H
