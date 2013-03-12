@@ -52,5 +52,7 @@
         <file>resources/ati.png</file>
         <file>resources/nvidia.png</file>
         <file>resources/restore.png</file>
+        <file>resources/invalid.png</file>
+        <file>resources/valid.png</file>
     </qresource>
 </RCC>

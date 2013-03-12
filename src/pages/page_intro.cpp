@@ -29,7 +29,7 @@ Page_Intro::Page_Intro() :
     ui->setupUi(this);
 
     setTitle(tr("Preparing to install Manjaro"));
-    setHelpURL("http://wiki.manjaro.org");
+    setHelpURL("file:///home/mango/Projekte/Manjaro/minst/build-debug/mini-slider/slider.html");
     ui->comboBoxLocale->hide();
 
     // Connect signals and slots

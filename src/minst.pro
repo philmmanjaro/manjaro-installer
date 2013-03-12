@@ -8,7 +8,7 @@ QT       += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-LIBS += -lmawiz -lparted -lmhwd -lX11
+LIBS += -lmawiz -lparted -lmhwd
 INCLUDEPATH += "/usr/include/parted"
 
 TARGET = minst
@@ -40,7 +40,8 @@ SOURCES += main.cpp\
     widgets/partwidget.cpp \
     partitionmanager/operations/operationresize.cpp \
     partitionmanager/operations/operationformat.cpp \
-    widgets/keyboardpreview.cpp
+    widgets/keyboardpreview.cpp \
+    pages/page_usersetup.cpp
 
 HEADERS  += minst.h \
     pages/page_intro.h \
@@ -69,7 +70,8 @@ HEADERS  += minst.h \
     widgets/partwidget.h \
     partitionmanager/operations/operationresize.h \
     partitionmanager/operations/operationformat.h \
-    widgets/keyboardpreview.h
+    widgets/keyboardpreview.h \
+    pages/page_usersetup.h
 
 
 FORMS += \
@@ -78,7 +80,8 @@ FORMS += \
     pages/page_managepartitions.ui \
     widgets/partitioncreatedialog.ui \
     pages/page_gpudriver.ui \
-    pages/page_keyboard.ui
+    pages/page_keyboard.ui \
+    pages/page_usersetup.ui
 
 RESOURCES += \
     minst_resources.qrc

@@ -18,40 +18,43 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef MINST_H
-#define MINST_H
 
-#include <MaWiz/mawiz.h>
+#ifndef PAGE_USERSETUP_H
+#define PAGE_USERSETUP_H
+
 #include <MaWiz/mawizpage.h>
-#include <QApplication>
-#include <QString>
-#include "pages/page_intro.h"
-#include "pages/page_timezone.h"
-#include "pages/page_managepartitions.h"
-#include "pages/page_gpudriver.h"
-#include "pages/page_keyboard.h"
-#include "pages/page_usersetup.h"
+#include <QRegExp>
+#include <QRegExpValidator>
+#include <QLineEdit>
+#include <QLabel>
 
 
-class MInst : public MaWiz
+namespace Ui {
+class Page_UserSetup;
+}
+
+
+
+class Page_UserSetup : public MaWizPage
 {
     Q_OBJECT
     
 public:
-    explicit MInst();
-    ~MInst();
+    explicit Page_UserSetup();
+    ~Page_UserSetup();
 
-public slots:
-    void init();
-
+    virtual void init() {}
+    bool ready();
+    
 private:
-    Page_Intro pageIntro;
-    Page_TimeZone pageTimeZone;
-    Page_ManagePartitions pageManagePartitions;
-    Page_GPUDriver pageGPUDriver;
-    Page_Keyboard pageKeyboard;
-    Page_UserSetup pageUserSetup;
+    Ui::Page_UserSetup *ui;
+    bool readyUsername, readyHostname, readyPassword, readyRootPassword;
 
+protected slots:
+    void username_textchanged(QString);
+    void hostname_textchanged(QString);
+    void password_textchanged(QString);
+    void rootpassword_textchanged(QString);
 };
 
-#endif // MINST_H
+#endif // PAGE_USERSETUP_H

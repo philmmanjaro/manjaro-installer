@@ -38,6 +38,7 @@ MInst::MInst() :
     addPage(&pageGPUDriver);
     addPage(&pageTimeZone);
     addPage(&pageKeyboard);
+    addPage(&pageUserSetup);
 
     // Connect Signals and Slots
     connect(this, SIGNAL(quitRequested())   ,   qApp, SLOT(quit()));
@@ -57,6 +58,7 @@ void MInst::init() {
     pageGPUDriver.init();
     pageTimeZone.init();
     pageKeyboard.init();
+    pageUserSetup.init();
 
     // Show widget
     show();
