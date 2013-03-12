@@ -31,6 +31,7 @@
 #include "pages/page_gpudriver.h"
 #include "pages/page_keyboard.h"
 #include "pages/page_usersetup.h"
+#include "pages/page_userimage.h"
 
 
 class MInst : public MaWiz
@@ -51,6 +52,7 @@ private:
     Page_GPUDriver pageGPUDriver;
     Page_Keyboard pageKeyboard;
     Page_UserSetup pageUserSetup;
+    Page_UserImage pageUserImage;
 
 };
 

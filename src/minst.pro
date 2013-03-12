@@ -41,7 +41,8 @@ SOURCES += main.cpp\
     partitionmanager/operations/operationresize.cpp \
     partitionmanager/operations/operationformat.cpp \
     widgets/keyboardpreview.cpp \
-    pages/page_usersetup.cpp
+    pages/page_usersetup.cpp \
+    pages/page_userimage.cpp
 
 HEADERS  += minst.h \
     pages/page_intro.h \
@@ -71,7 +72,8 @@ HEADERS  += minst.h \
     partitionmanager/operations/operationresize.h \
     partitionmanager/operations/operationformat.h \
     widgets/keyboardpreview.h \
-    pages/page_usersetup.h
+    pages/page_usersetup.h \
+    pages/page_userimage.h
 
 
 FORMS += \
@@ -81,7 +83,8 @@ FORMS += \
     widgets/partitioncreatedialog.ui \
     pages/page_gpudriver.ui \
     pages/page_keyboard.ui \
-    pages/page_usersetup.ui
+    pages/page_usersetup.ui \
+    pages/page_userimage.ui
 
 RESOURCES += \
     minst_resources.qrc

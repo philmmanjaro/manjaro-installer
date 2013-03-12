@@ -39,6 +39,7 @@ MInst::MInst() :
     addPage(&pageTimeZone);
     addPage(&pageKeyboard);
     addPage(&pageUserSetup);
+    addPage(&pageUserImage);
 
     // Connect Signals and Slots
     connect(this, SIGNAL(quitRequested())   ,   qApp, SLOT(quit()));
@@ -59,6 +60,7 @@ void MInst::init() {
     pageTimeZone.init();
     pageKeyboard.init();
     pageUserSetup.init();
+    pageUserImage.init();
 
     // Show widget
     show();

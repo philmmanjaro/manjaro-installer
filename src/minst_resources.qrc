@@ -54,5 +54,7 @@
         <file>resources/restore.png</file>
         <file>resources/invalid.png</file>
         <file>resources/valid.png</file>
+        <file>resources/laptop.png</file>
+        <file>resources/addUser.png</file>
     </qresource>
 </RCC>
