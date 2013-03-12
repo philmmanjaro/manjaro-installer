@@ -40,7 +40,6 @@ Page_Keyboard::Page_Keyboard() :
     connect(ui->listVariant, SIGNAL(currentItemChanged(QListWidgetItem*,QListWidgetItem*))   ,   this, SLOT(listVariant_currentItemChanged(QListWidgetItem*,QListWidgetItem*)));
     connect(ui->buttonRestore, SIGNAL(clicked())  ,   this, SLOT(buttonRestore_clicked()));
     connect(ui->comboBoxModel, SIGNAL(currentIndexChanged(const QString))   ,   this, SLOT(comboBoxModel_currentIndexChanged(QString)));
-    connect(ui->listVariant, SIGNAL(currentItemChanged(QListWidgetItem*,QListWidgetItem*))   ,  this, SIGNAL(checkReady()));
 }
 
 
@@ -144,6 +143,8 @@ void Page_Keyboard::init() {
     // Set current layout
     if (currentLayoutItem)
         ui->listLayout->setCurrentItem(currentLayoutItem);
+    else if (ui->listLayout->count() > 0)
+        ui->listLayout->setCurrentRow(0);
 }
 
 
@@ -208,6 +209,8 @@ void Page_Keyboard::listVariant_currentItemChanged(QListWidgetItem * current, QL
 
     keyboardPreview.setLayout(layout);
     keyboardPreview.setVariant(variant);
+
+    emit checkReady();
 
     // Set Xorg keyboard layout
     system(QString("setxkbmap -layout \"%1\" -variant \"%2\"").arg(layout, variant).toUtf8());

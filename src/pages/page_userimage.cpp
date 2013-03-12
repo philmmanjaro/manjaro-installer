@@ -30,10 +30,9 @@ Page_UserImage::Page_UserImage() :
     setTitle(tr("Set User Image"));
     setHelpURL("");
 
-    ui->userImageLayout->addWidget(&imageWidget);
-    imageWidget.setImage(QImage(":/images/resources/tux.png"));
+    isReady = false;
 
-    connect(&imageWidget, SIGNAL(clicked()) ,   this, SLOT(imageWidget_clicked()));
+    connect(ui->listWidget, SIGNAL(currentItemChanged(QListWidgetItem*,QListWidgetItem*))   ,   this, SLOT(currentItemChanged(QListWidgetItem*)));
 }
 
 
@@ -45,60 +44,25 @@ Page_UserImage::~Page_UserImage()
 
 
 
-void Page_UserImage::imageWidget_clicked() {
-    QString fileName = QFileDialog::getOpenFileName(this,
-        tr("Select Image"), USER_IMAGES_PATH, tr("Image Files (*.png *.jpg *.bmp)"));
+void Page_UserImage::init() {
+    // Get all images in the specific path
+    QStringList images = QDir(USER_IMAGES_PATH).entryList(QStringList() << "*.png" << "*.jpg" << "*.bmp", QDir::Files, QDir::Name);
 
-    if (!fileName.isEmpty())
-        imageWidget.setImage(QImage(fileName));
+    foreach (QString file, images) {
+        QListWidgetItem *item = new QListWidgetItem(ui->listWidget);
+        item->setIcon(QIcon(QString(USER_IMAGES_PATH) + "/" + file));
+    }
 }
 
 
 
-UserImageWidget::UserImageWidget() : QWidget()
-{
-    setCursor(Qt::PointingHandCursor);
-
-    background = QImage(":/images/resources/laptop.png");
-    notification = QImage(":/images/resources/addUser.png");
-
-    setMaximumSize(background.size());
-    setMinimumSize(background.size());
+bool Page_UserImage::ready() {
+    return isReady;
 }
 
 
 
-void UserImageWidget::setImage(QImage image) {
-    this->image = image.scaled(84, 95, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
-    repaint();
-}
-
-
-
-void UserImageWidget::paintEvent(QPaintEvent *) {
-    QPainter p(this);
-    p.setRenderHint(QPainter::Antialiasing);
-    p.drawImage(0, 0, background);
-    p.drawImage(331, 82, image);
-
-    if (underMouse())
-        p.drawImage(399, 56, notification);
-}
-
-
-
-void UserImageWidget::mouseReleaseEvent(QMouseEvent *) {
-    emit clicked();
-}
-
-
-
-void UserImageWidget::enterEvent(QEvent *) {
-    repaint();
-}
-
-
-
-void UserImageWidget::leaveEvent(QEvent *) {
-    repaint();
+void Page_UserImage::currentItemChanged(QListWidgetItem *) {
+    isReady = true;
+    emit checkReady();
 }

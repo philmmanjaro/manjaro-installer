@@ -22,37 +22,18 @@
 #define PAGE_USERIMAGE_H
 
 #include "MaWiz/mawizpage.h"
-#include <QWidget>
-#include <QPainter>
-#include <QImage>
+#include <QIcon>
 #include <QFileDialog>
+#include <QDir>
+#include <QFile>
+#include <QStringList>
+#include <QListWidgetItem>
 #include "const.h"
 
 
 namespace Ui {
 class Page_UserImage;
 }
-
-
-class UserImageWidget : public QWidget
-{
-    Q_OBJECT
-public:
-    explicit UserImageWidget();
-    void setImage(QImage image);
-
-signals:
-    void clicked();
-
-protected:
-    QImage image, background, notification;
-
-    void paintEvent(QPaintEvent *);
-    void mouseReleaseEvent(QMouseEvent *);
-    void enterEvent(QEvent *);
-    void leaveEvent(QEvent *);
-};
-
 
 
 class Page_UserImage : public MaWizPage
@@ -63,14 +44,15 @@ public:
     explicit Page_UserImage();
     ~Page_UserImage();
 
-    virtual void init() {}
+    void init();
+    bool ready();
     
 private:
     Ui::Page_UserImage *ui;
-    UserImageWidget imageWidget;
+    bool isReady;
 
 protected slots:
-    void imageWidget_clicked();
+    void currentItemChanged(QListWidgetItem *item);
 
 };
 

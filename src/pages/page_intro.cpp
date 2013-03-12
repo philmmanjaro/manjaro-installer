@@ -36,10 +36,6 @@ Page_Intro::Page_Intro() :
     connect(ui->listWidgetLanguage, SIGNAL(currentItemChanged(QListWidgetItem*,QListWidgetItem*))   ,   this, SLOT(listWidgetLanguageItemChanged(QListWidgetItem*,QListWidgetItem*)));
     connect(ui->listWidgetTerritory, SIGNAL(currentItemChanged(QListWidgetItem*,QListWidgetItem*))   ,   this, SLOT(listWidgetTerritoryItemChanged(QListWidgetItem*,QListWidgetItem*)));
     connect(ui->comboBoxLocale, SIGNAL(currentIndexChanged(QString))    ,   this, SLOT(comboBoxLocaleIndexChanged(QString)));
-
-    // Ready check signals
-    connect(ui->listWidgetLanguage, SIGNAL(itemSelectionChanged())   ,   this, SIGNAL(checkReady()));
-    connect(ui->listWidgetTerritory, SIGNAL(itemSelectionChanged())   ,   this, SIGNAL(checkReady()));
 }
 
 
@@ -80,9 +76,7 @@ void Page_Intro::init() {
 
 
 bool Page_Intro::ready() {
-    return (ui->listWidgetLanguage->selectedItems().size() > 0
-            && ui->listWidgetTerritory->selectedItems().size() > 0
-            && ui->comboBoxLocale->count() > 0);
+    return (ui->comboBoxLocale->count() > 0);
 }
 
 
@@ -123,6 +117,8 @@ void Page_Intro::listWidgetLanguageItemChanged(QListWidgetItem *current, QListWi
     // Enable signals
     ui->listWidgetTerritory->blockSignals(false);
     ui->comboBoxLocale->blockSignals(false);
+
+    emit checkReady();
 }
 
 
@@ -156,6 +152,8 @@ void Page_Intro::listWidgetTerritoryItemChanged(QListWidgetItem *current, QListW
 
     // Enable signals
     ui->comboBoxLocale->blockSignals(false);
+
+    emit checkReady();
 }
 
 
@@ -172,4 +170,6 @@ void Page_Intro::comboBoxLocaleIndexChanged(const QString &text) {
         ui->labelDescription->setText(currentLocales.at(i).description);
         break;
     }
+
+    emit checkReady();
 }
