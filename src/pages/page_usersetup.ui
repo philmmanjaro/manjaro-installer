@@ -564,7 +564,7 @@
         <item row="0" column="1">
          <widget class="QRadioButton" name="checkBoxLoginAuto">
           <property name="text">
-           <string>Log in Automatically</string>
+           <string>Log in automatically</string>
           </property>
           <property name="checked">
            <bool>false</bool>
