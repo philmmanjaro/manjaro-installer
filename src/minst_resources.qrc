@@ -56,5 +56,6 @@
         <file>resources/valid.png</file>
         <file>resources/laptop.png</file>
         <file>resources/addUser.png</file>
+        <file>resources/tux.png</file>
     </qresource>
 </RCC>

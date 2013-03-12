@@ -25,7 +25,7 @@
 #define LOCALESDIR "/usr/share/i18n/locales"
 #define TZ_DATA_FILE "/usr/share/zoneinfo/zone.tab"
 #define XKB_FILE "/usr/share/X11/xkb/rules/base.lst"
-#define USER_IMAGES_PATH "/usr/share/backgrounds"
+#define USER_IMAGES_PATH "/usr/share/pixmaps/faces"
 
 
 #endif // CONST_H

@@ -31,6 +31,7 @@ Page_UserImage::Page_UserImage() :
     setHelpURL("");
 
     ui->userImageLayout->addWidget(&imageWidget);
+    imageWidget.setImage(QImage(":/images/resources/tux.png"));
 
     connect(&imageWidget, SIGNAL(clicked()) ,   this, SLOT(imageWidget_clicked()));
 }
